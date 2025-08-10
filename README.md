@@ -1,0 +1,4 @@
+## Project Description
+The Scheme Research Assistant is an intelligent web application designed to simplify the process of understanding complex government schemes. Often, detailed information about public initiatives is spread across lengthy documents and multiple websites, making it difficult for citizens to find clear, direct answers to their questions.
+
+This tool tackles that problem by allowing users to simply provide the URLs of relevant articles. Using advanced AI techniques through LangChain and Cohere's powerful language models, the application reads, processes, and synthesizes the information into an interactive knowledge base. Users can then ask specific questions—such as "Who is eligible?" or "What are the benefits?"—and receive immediate, accurate answers drawn directly from the provided sources. This transforms the tedious task of manual research into a quick and efficient conversation, making vital public information more accessible to everyone.
