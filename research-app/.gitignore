@@ -1,0 +1,11 @@
+
+venv/
+__pycache__/
+
+.env
+
+faiss_index_store/
+*.pkl
+
+.vscode/
+.DS_Store
