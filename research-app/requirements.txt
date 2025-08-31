@@ -1,11 +1,7 @@
 streamlit
 langchain
-huggingface_hub
 langchain-community
 python-dotenv
-langchain-cohere
-unstructured
-# --- New packages added below ---
 requests
 beautifulsoup4
 langchain-google-genai
