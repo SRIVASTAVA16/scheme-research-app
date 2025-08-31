@@ -10,3 +10,4 @@ requests
 beautifulsoup4
 langchain-google-genai
 nest-asyncio
+chromadb

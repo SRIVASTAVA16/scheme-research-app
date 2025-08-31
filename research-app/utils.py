@@ -5,7 +5,8 @@ import warnings
 from dotenv import load_dotenv
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import FAISS
+# NEW: Import Chroma instead of FAISS
+from langchain_community.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain_core.documents import Document
@@ -74,18 +75,18 @@ def get_gemini_embeddings():
 def build_vector_index(chunks):
     embeddings = get_gemini_embeddings()
     try:
-        index = FAISS.from_documents(chunks, embeddings)
-        index.save_local("faiss_index_store")
+        # NEW: Use Chroma.from_documents and specify a directory
+        index = Chroma.from_documents(chunks, embeddings, persist_directory="./chroma_db_store")
     except Exception as e:
-        raise RuntimeError(f"FAISS vector index creation failed: {e}")
+        raise RuntimeError(f"ChromaDB vector index creation failed: {e}")
     return index
 
 def load_saved_index():
-    if not os.path.exists("faiss_index_store"):
+    if not os.path.exists("./chroma_db_store"):
         return None
     embeddings = get_gemini_embeddings()
-    return FAISS.load_local("faiss_index_store", embeddings, allow_dangerous_deserialization=True)
-
+    # NEW: Load the index from the specified directory
+    return Chroma(persist_directory="./chroma_db_store", embedding_function=embeddings)
 def respond_to_question(query, index):
     docs = index.similarity_search(query)
     if not docs:
