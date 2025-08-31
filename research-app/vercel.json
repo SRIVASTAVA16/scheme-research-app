@@ -1,11 +1,7 @@
 {
   "functions": {
     "research-app/main.py": {
-      "excludeFiles": [
-        "**/onnxruntime/**",
-        "**/*.onnx",
-        "**/*.bin"
-      ]
+      "excludeFiles": "**/onnxruntime/**"
     }
   },
   "builds": [
@@ -21,3 +17,4 @@
     }
   ]
 }
+
