@@ -1,20 +1,14 @@
 {
-  "functions": {
-    "research-app/main.py": {
-      "excludeFiles": "**/onnxruntime/**"
-    }
-  },
   "builds": [
     {
-      "src": "research-app/main.py",
+      "src": "main.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "research-app/main.py"
+      "dest": "main.py"
     }
   ]
 }
-
