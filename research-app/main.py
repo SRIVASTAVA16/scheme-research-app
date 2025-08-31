@@ -1,3 +1,5 @@
+import nest_asyncio
+nest_asyncio.apply()
 import streamlit as st
 from utils import (
     fetch_scheme_pages_robust, # Using the new function

@@ -1,24 +1,27 @@
 import os
 import requests
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 import warnings
+from dotenv import load_dotenv
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_cohere import CohereEmbeddings, ChatCohere
-# THIS IS THE CORRECTED LINE:
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain_core.documents import Document
+
+# This line loads the environment variables from the .env file for local development
+load_dotenv()
 
 # Suppress only the InsecureRequestWarning from urllib3
 warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
-load_dotenv()
-cohere_api_key = os.getenv("COHERE_API_KEY")
+# Vercel will get this from the Environment Variables you set
+# Locally, load_dotenv() will get it from your .env file
+gemini_api_key = os.getenv("GEMINI_API_KEY")
 
-if not cohere_api_key:
-    raise ValueError("COHERE_API_KEY not found. Please check your .env file.")
+if not gemini_api_key:
+    raise ValueError("GEMINI_API_KEY not found. Please create a .env file locally or set it in your Vercel project settings.")
 
 def fetch_scheme_pages_robust(url_list):
     """
@@ -61,8 +64,15 @@ def divide_into_chunks(docs):
         raise ValueError("Failed to create text chunks from the documents.")
     return chunks
 
+def get_gemini_embeddings():
+    """Initializes and returns the Gemini embeddings model."""
+    return GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001",
+        google_api_key=gemini_api_key
+    )
+
 def build_vector_index(chunks):
-    embeddings = CohereEmbeddings(model="embed-english-v3.0")
+    embeddings = get_gemini_embeddings()
     try:
         index = FAISS.from_documents(chunks, embeddings)
         index.save_local("faiss_index_store")
@@ -73,17 +83,20 @@ def build_vector_index(chunks):
 def load_saved_index():
     if not os.path.exists("faiss_index_store"):
         return None
-    embeddings = CohereEmbeddings(model="embed-english-v3.0")
+    embeddings = get_gemini_embeddings()
     return FAISS.load_local("faiss_index_store", embeddings, allow_dangerous_deserialization=True)
 
 def respond_to_question(query, index):
     docs = index.similarity_search(query)
     if not docs:
         return "No relevant information was found to answer your question.", []
-    llm = ChatCohere(model="command", temperature=0)
+    
+    llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, google_api_key=gemini_api_key)
     chain = load_qa_chain(llm, chain_type="stuff")
     try:
-        result = chain.run(input_documents=docs, question=query)
-        return result, docs
+        # Using invoke for the latest LangChain compatibility
+        result = chain.invoke({"input_documents": docs, "question": query}, return_only_outputs=True)
+        return result['output_text'], docs
     except Exception as e:
         return f"Error generating response from LLM: {e}", docs
+

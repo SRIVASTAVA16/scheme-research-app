@@ -1,7 +1,5 @@
 streamlit
 langchain
-faiss-cpu
-sentence-transformers
 huggingface_hub
 langchain-community
 python-dotenv
@@ -10,3 +8,5 @@ unstructured
 # --- New packages added below ---
 requests
 beautifulsoup4
+langchain-google-genai
+nest-asyncio
