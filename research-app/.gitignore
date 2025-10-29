@@ -1,11 +1,33 @@
-
+# Python
 venv/
+env/
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 
+# Environment variables
 .env
+.env.local
 
+# Vector database storage
 faiss_index_store/
+chroma_db_store/
 *.pkl
 
+# IDE
 .vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+
+# Logs
+*.log
