@@ -26,8 +26,8 @@ chroma_db_store/
 .DS_Store
 Thumbs.db
 
-# Streamlit
-.streamlit/
+# Streamlit (keep config for deployment)
+# .streamlit/ - commented out to include config.toml for deployment
 
 # Logs
 *.log
